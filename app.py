@@ -13,13 +13,13 @@ from dataManager import DataRequest
 
 class dataManager():
     # info.json has to be updated by the client before this can use the file
-    def __init__(self,file='info.json'):
-        self.refreshData(file)
+    def __init__(self):
+        pass
 
     def updateThisChunk(self,index,chunk):
         self.info[index]["chunk"] = chunk
 
-    def refreshData(self,file):
+    def refreshData(self,file='info.json'):
         with open(file) as f: self.info = json.load(f)
         self.dfs =[pd.read_pickle(ii['id']) for ii in self.info]
 
@@ -31,10 +31,7 @@ class dataManager():
         return xx,yy
 
 
-
-
 client = DataRequest() # reads and updates info.json and relavant data
-client.updateData()
 
 data = dataManager() # reads the file to use for the ui
 # probably i should merge the two classes
@@ -61,7 +58,9 @@ app.layout = html.Div([
             html.Button(className="btn",n_clicks=0,id="fulRefBut")
         ],className="lastRef")
     ],className="header"),
-    html.Div(id='jobList', children=[], style={"flex":1, "overflow-y": "auto"}),
+    html.Div(id='jobList', children=[
+        html.Label("Updating Database. Please wait....", style={"font-size":"21px"})
+    ], style={"flex":1, "overflow-y": "auto"}),
 ],className='mainDiv')
 
 

@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 class DataRequest():
     def __init__(self):
-        self.jobInfos = []
+        # self.jobInfos = []
         self.client = paramiko.SSHClient()
         self.client._policy = paramiko.WarningPolicy()
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -22,6 +22,7 @@ class DataRequest():
 
     def updateData(self):
         info = self.readJson()
+        self.jobInfos = []
         for dat in info:
             if 'id' not in dat.keys(): # new added job
                 newId = ''.join(choice(digits) for i in range(10))  # generate a 10 digit random string
@@ -37,11 +38,11 @@ class DataRequest():
                 # dat["eta"] = ""
                 dat["chunk"] = "norm"
             df = self.requestData(dat['host'],dat['location'],dat["id"])
-            print(df)
+            # print(df)
             dat["currentStep"] = df["step"].iloc[-1]
             dat["totalStep"] = 10000 # do it somehow else
             dat["submitted"] = df["timeStamp"].iloc[0]#.strftime('%H:%M:%S %b %d ')
-            dat["lastUpdated"] = df["timeStamp"].iloc[0]#.strftime('%H:%M:%S %b %d ')
+            dat["lastUpdated"] = df["timeStamp"].iloc[-1]#.strftime('%H:%M:%S %b %d ')
             dat["avgTime"] = df["timeDelay"].mean()
             timeLeft = (dat["totalStep"] - dat["currentStep"])*dat["avgTime"]
             dat["eta"] = timeLeft/3600.0  #  timeleft in hours
@@ -56,6 +57,7 @@ class DataRequest():
             dat["lastUpdated"] = dat["lastUpdated"].strftime('%I:%M %p %b %d ')
             dat["eta"]         = str(dat["eta"]) +' hours'
             self.jobInfos.append(dat)
+        print("All data is updated")
         self.saveJson()
 
 
@@ -63,10 +65,12 @@ class DataRequest():
     def saveJson(self):
         with open('info.json','w') as f:
             json.dump(self.jobInfos,f,indent=4)
+        print("Saved configuration in info.json")
 
 
 
     def readJson(self):
+        print("Reading configuration form info.json")
         with open('./info.json') as f: 
             info = json.load(f)
         return info
@@ -84,6 +88,7 @@ class DataRequest():
         # sftp = paramiko.SFTPClient.from_transport(self.client)
         sftp = self.client.open_sftp()
 
+        print("Requesting data from {} at {}".format(host, location))
         # Download
         filepath = location+"/fort.21"
         localpath = 'tmp.dat'
@@ -115,7 +120,8 @@ class DataRequest():
         return df
 
 
-# dd = DataRequest()
-# dd.updateData()
+if __name__ == "__main__":
+    dd = DataRequest()
+    dd.updateData()
 
 

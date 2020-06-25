@@ -76,7 +76,8 @@ body{
 .longCell{
     overflow-y: auto;
     height: 3pc;
-    position: fixed;
+    /* has to fix this for the long names, lets hope thers none */
+    /* position: fixed; */      
 }
 
 .sel{
