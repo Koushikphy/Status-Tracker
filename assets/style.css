@@ -16,7 +16,7 @@ body{
 .job{
     display: flex;
     flex-flow: row;
-    font-size: 23px;
+    font-size: 21.5px;
     margin: 13px 0 7px 0;
     border: 1px solid black;
     border-radius: 5px;
@@ -24,17 +24,45 @@ body{
     height: 250px;
 }
 .jobDescription{
-    width: 40%;
+    width: 30%;
 }
 .jobPlots{
     flex: 1;
     height: 100%;
 }
 
+.tab-content{
+    height: 100%;
+}
+.dash-graph{
+    height: 215px;
+}
+.tab{
+    height: 35px;
+    font-size: 21px;
+    padding: 3px 0px 5px 0 !important;
+    /* border-radius: 3px; */
+    /* width: calc(50%/3); */
+}
+
+.tab--selected{
+    color: black;
+    box-shadow: 1px 1px 0px white;
+    /* border-left: 1px solid lightgrey !important;
+    border-right: 1px solid lightgrey !important; */
+    border-top: 2px solid #e36209 !important;
+    border-bottom: none;
+}
+
+.tab-container{
+    margin: 0 auto;
+    width: 70%;
+}
+
 .header{
     font-size: 30px;
     height: 50px;
-    background-color: cornsilk;
+    background-color: #cae4ab;
     padding-top: 5px;
 }
 .lastRef{
@@ -57,7 +85,7 @@ body{
 }
 
 .jobDescription tr td:nth-child(2) {
-    font-size: 21px;
+    font-size: 20px;
     width: 23%;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

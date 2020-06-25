@@ -40,12 +40,14 @@ class DataRequest():
             df = self.requestData(dat['host'],dat['location'],dat["id"])
             # print(df)
             dat["currentStep"] = df["step"].iloc[-1]
-            dat["totalStep"] = 10000 # do it somehow else
+            dat["totalStep"] = 12000 # do it somehow else
             dat["submitted"] = df["timeStamp"].iloc[0]#.strftime('%H:%M:%S %b %d ')
             dat["lastUpdated"] = df["timeStamp"].iloc[-1]#.strftime('%H:%M:%S %b %d ')
             dat["avgTime"] = df["timeDelay"].mean()
             timeLeft = (dat["totalStep"] - dat["currentStep"])*dat["avgTime"]
-            dat["eta"] = timeLeft/3600.0  #  timeleft in hours
+            dat["eta"] = timeLeft/3600.0  #  timeleft in hours  
+            timeSpent = dat["lastUpdated"] - dat["submitted"]
+            dat["timeSpent"] = timeSpent.seconds/3600.0
 
             # weird, python 2 cannot strftime any date below 1900
 
@@ -53,9 +55,10 @@ class DataRequest():
             dat["currentStep"] = str(dat["currentStep"])
             dat["totalStep"]   = str(dat["totalStep"])
             dat["avgTime"]     = str(dat["avgTime"])
-            dat["submitted"]   = dat["submitted"].strftime('%I:%M %p %b %d ')
-            dat["lastUpdated"] = dat["lastUpdated"].strftime('%I:%M %p %b %d ')
-            dat["eta"]         = str(dat["eta"]) +' hours'
+            dat["submitted"]   = dat["submitted"].strftime('%I:%M:%S %p %b %d ')
+            dat["lastUpdated"] = dat["lastUpdated"].strftime('%I:%M:%S %p %b %d ')
+            dat["eta"]         = "{:.2f} hours".format(dat["eta"])
+            dat["timeSpent"]   = "{:.2f} hours".format(dat["timeSpent"])
             self.jobInfos.append(dat)
         print("All data is updated")
         self.saveJson()

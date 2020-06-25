@@ -1,13 +1,14 @@
 [
     {
-        "totalStep": "10000", 
-        "name": "trial feuigheg rggihrg irgrgirhge riger gheri ofjifhef feihfeifhe", 
+        "totalStep": "12000", 
+        "name": "trial feuigheg fuhweuf fuhfuf efuheguer efuhrufr rigurhgr ruirhgrueh", 
         "chunk": "norm", 
         "avgTime": "8.28320108", 
-        "submitted": "07:12 PM Jun 19 ", 
+        "submitted": "07:12:06 PM Jun 19 ", 
         "host": "soumya", 
-        "eta": "0.0 hours", 
-        "lastUpdated": "07:12 PM Jun 19 ", 
+        "eta": "4.60 hours", 
+        "timeSpent": "23.01 hours", 
+        "lastUpdated": "06:12:30 PM Jun 20 ", 
         "id": "1157370262", 
         "currentStep": "10000", 
         "location": "/media/SOUMYA/KOUSHIK/mount/FH2_NEW/DIAB/MODIFIED_SURF/CURRENT_SURF/RHO_GRID_200/ALT_CHECK"
