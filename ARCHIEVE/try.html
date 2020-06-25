@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            display: flex;
+            overflow: hidden;
+            flex-flow: column;
+            height: 100vh;
+        }
+        .job{
+            display: flex;
+            flex-flow: row;
+            font-size: 23px;
+            margin: 13px 0 7px 0;
+            border: 1px solid black;
+            border-radius: 5px;
+            padding: 5px;
+            height: 250px;
+        }
+        .jobDescription{
+            width: 40%;
+        }
+        .jobPlots{
+            flex: 1;
+            height: 100%;
+        }
+
+        .header{
+            font-size: 30px;
+            height: 50px;
+            background-color: cornsilk;
+        }
+        .lastRef{
+            font-size: 21px;
+            float: right;
+            /* position: absolute; */
+            /* bottom: 0; */
+            margin-top: 21px;
+            font-style: italic;
+        }
+
+
+        .jobDescription{
+            height: 250px;
+            width: 40%;
+        }
+
+        .jobDescription tr td:nth-child(1) {
+            width: 10%;
+        }
+
+        .jobDescription tr td:nth-child(2) {
+            font-size: 21px;
+            width: 23%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .jobDescription td{
+            padding-top: 1px;
+            
+        }
+        .jobDescription tr:first-child{
+            height: 3.3pc;
+        }
+
+        .jobDescription tr:nth-child(odd){
+            background-color: rgb(250, 250, 250);
+        }
+
+        .longCell{
+            overflow-y: auto;
+            position: fixed;
+            height: 3pc;
+        }
+
+        .sel{
+            font-size: 21px;
+        }
+
+        #myDiv{
+            height: 90%;
+        }
+
+        .selectBar{
+            text-align: center;
+            border: 1px solid black;
+            border-radius: 5px;
+            width: fit-content;
+            margin: 0 auto;
+            height: 10%;
+        }
+
+        .selectBar > label{
+            padding: 0 5px 0 5px;
+        }
+
+
+        .selectBar > label:hover{
+            cursor: pointer;
+        }
+
+
+
+        .midSelect{
+            border-left: 1px solid black;
+            border-right: 1px solid black;
+        }
+
+        .fullRef{
+            background-image: url(./refresh-1.svg);
+            border: none;
+            background-color: transparent;
+            height: 24px;
+            width: 24px;
+            cursor: pointer;
+        }
+        .fullRef:active, .fullRef:focus{
+            border: none;
+            outline: none;
+        }
+
+        #addJob{
+            font-size: 25px;
+            width: 70%;
+            padding-left: 10px;
+        }
+
+        #addJob tr td:first-child{
+            width: 20%;
+            padding: 3px 0 3px 0;
+        }
+
+        #addJob tr td input{
+            width: 100%;
+            height: 1.5pc;
+            /* border-radius: 1px; */
+            outline: none;
+            border: none;
+            border-bottom: 1px solid black;
+            font-size: 1.4pc;
+        }
+
+        #submit{
+            margin: 0 auto;
+            height: 3pc;
+            font-size: 21px;
+            font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            margin-top: 1pc;
+        }
+
+
+
+    </style>
+    <script src="./plotly-basic-latest.min.js"></script>
+
+</head>
+<body>
+    <div class="header">
+        Status Tracker
+        <div class='lastRef'>
+            Last Refreshed on : 11th May; 20:20
+            <button class='fullRef'></button>
+        </div>
+    </div>
+
+    <div style="display: flex;flex-direction: row;">
+        <table id="addJob">
+            <tr>
+                <td>Job Name</td>
+                <td><input type="text"></td>
+            </tr>
+            <tr>
+                <td>Host</td>
+                <td><input type="text"></td>
+            </tr>
+            <tr>
+                <td>Location</td>
+                <td><input type="text"></td>
+            </tr>
+        </table>
+        <Button id="submit">Add Job</Button>
+        <Button >Close</Button>
+    </div>
+
+
+    <div style="flex:1; overflow-y: auto;">
+        <div class="job"><!--   div for ta  particular job -->
+                <table class="jobDescription">
+                    <tr>
+                        <td>Job Name</td>
+                        <td class="longCell">fkehgiehgeio gergerg fheugegh rgrugher gerhg ergreghergue rh grehgruh tu gthgtuh ttght gutrhg tuhg trughtr  h </td>
+                    </tr>
+                    <tr>
+                        <td>Host</td>
+                        <td title="location">Soumya</td>
+                    </tr>
+                    <tr>
+                        <td>Progress</td>
+                        <td>1100/12000</td>
+                    </tr>
+                    <tr>
+                        <td>Submitted On</td>
+                        <td>11th May 12:20</td>
+                    </tr>
+                    <tr>
+                        <td>Last updated on</td>
+                        <td>11th May 12:23 <button class='fullRef'></button></td>
+                    </tr>
+                    <tr>
+                        <td>Average time</td>
+                        <td>7 sec</td>
+                    </tr>
+                    <tr>
+                        <td>ETA</td>
+                        <td>11th May 12:23</td>
+                    </tr>
+                </table>
+
+                <div class="jobPlots">
+                    <div class='selectBar'>
+                        <label>Norm</label><label class="midSelect">Energy</label><label>TimeDelay</label>
+                    </div>
+                    <div id='myDiv'>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+
+    var trace1 = {
+        x: [1, 2, 3, 4],
+        y: [10, 15, 13, 17],
+        mode: 'lines',
+        type: 'scatter'
+    };
+
+    var layout = {
+        margin:{
+            t:0,r:0,l:20,b:20
+        },
+        showlegend: false,
+        // xaxis:{
+        //     title: 'Time step'
+        // },
+        // yaxis:{
+        //     title: 'Norm'
+        // }
+    }
+
+    Plotly.newPlot('myDiv', [trace1],layout);
+</script>
+</html>
