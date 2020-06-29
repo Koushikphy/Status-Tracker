@@ -12,7 +12,6 @@ from dataManager import DataRequest
 
 # TODO:
 # 1. use way to read the total time step
-# 2. Time spent
 
 
 class dataManager():
