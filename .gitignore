@@ -1,3 +1,5 @@
 tmp.dat
 __pycache__
 *.pyc
+data
+forward.py

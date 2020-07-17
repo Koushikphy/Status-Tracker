@@ -1,6 +1,5 @@
 import pandas as pd 
-import json
-import paramiko,os
+import json, paramiko,os,re
 from random import choice
 from string import digits
 from datetime import datetime, timedelta
@@ -30,31 +29,25 @@ class DataRequest():
                 dat['host'] = dat['host']
                 dat['location'] = dat['location']
                 dat["id"] = newId
-                # dat["currentStep"] = ''  # add those missing keys
-                # dat["totalStep"] = ''
-                # dat["submitted"] = ""
-                # dat["lastUpdated"] =""
-                # dat["avgTime"] = ""
-                # dat["eta"] = ""
                 dat["chunk"] = "norm"
-            df = self.requestData(dat['host'],dat['location'],dat["id"])
-            # print(df)
+            df, totalStep = self.requestData(dat['host'],dat['location'],dat["id"])
+
             dat["currentStep"] = df["step"].iloc[-1]
-            dat["totalStep"] = 12000 # do it somehow else
+            dat["totalStep"] = totalStep # do it somehow else
             dat["submitted"] = df["timeStamp"].iloc[0]#.strftime('%H:%M:%S %b %d ')
             dat["lastUpdated"] = df["timeStamp"].iloc[-1]#.strftime('%H:%M:%S %b %d ')
             dat["avgTime"] = df["timeDelay"].mean()
             timeLeft = (dat["totalStep"] - dat["currentStep"])*dat["avgTime"]
             dat["eta"] = timeLeft/3600.0  #  timeleft in hours  
             timeSpent = dat["lastUpdated"] - dat["submitted"]
-            dat["timeSpent"] = timeSpent.seconds/3600.0
+            dat["timeSpent"] = timeSpent.seconds/3600.0  #  timespent in hours  
 
             # weird, python 2 cannot strftime any date below 1900
 
             # now convert all to string
             dat["currentStep"] = str(dat["currentStep"])
             dat["totalStep"]   = str(dat["totalStep"])
-            dat["avgTime"]     = str(dat["avgTime"])
+            dat["avgTime"]     = '{:.2f} sec'.format(dat["avgTime"]) 
             dat["submitted"]   = dat["submitted"].strftime('%I:%M:%S %p %b %d ')
             dat["lastUpdated"] = dat["lastUpdated"].strftime('%I:%M:%S %p %b %d ')
             dat["eta"]         = "{:.2f} hours".format(dat["eta"])
@@ -79,9 +72,10 @@ class DataRequest():
         return info
 
 
-    def requestData(self,host,location,jId):   # calls and update a specifc job data
+    def requestData(self,host,location,jId): # calls and update a specifc job data
         cfg={}
         user_config = self.ssh_config.lookup(host)
+        # print(user_config)
         cfg['hostname'] = user_config['hostname']
         cfg['username'] = user_config['user']
         cfg['port'] ='22'
@@ -97,17 +91,17 @@ class DataRequest():
         localpath = 'tmp.dat'
         sftp.get(filepath,localpath)
         if sftp: sftp.close()
-        df = self.readData()
-        df.to_pickle(jId) # save the file and return df
-        return df
+        df, totalStep = self.readData()
+        df.to_pickle('data'+jId) # save the file and return df
+        return df, totalStep
 
 
     def readData(self,file='tmp.dat'):
         with open(file) as f:
             txt = f.read()
 
+        totalStep = int(re.findall('Total Time Step: (\d+)', txt)[0])
         txt = txt.split("Starting Propagation:")[1].split('\n')[5:]
-
         # splits along column
         dat = [i.split() for i in txt]
         dat = filter(lambda x : True if len(x)==7 else False, dat)
@@ -120,7 +114,7 @@ class DataRequest():
         df = pd.DataFrame(dat,columns=['step', 'time', 'timeStamp', 'timeDelay', 'energy','norm'])
         # print(df)
         df = df.astype(col)
-        return df
+        return df, totalStep
 
 
 if __name__ == "__main__":

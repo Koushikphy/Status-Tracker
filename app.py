@@ -11,64 +11,26 @@ from dataManager import DataRequest
 
 
 # TODO:
-# 1. use way to read the total time step
-
-
-class dataManager():
-    # info.json has to be updated by the client before this can use the file
-    def __init__(self):
-        pass
-
-    def updateThisChunk(self,index,chunk):
-        self.info[index]["chunk"] = chunk
-
-    def refreshData(self,file='info.json'):
-        with open(file) as f: self.info = json.load(f)
-        self.dfs =[pd.read_pickle(ii['id']) for ii in self.info]
-
-
-    def getData(self,index):
-        df = self.dfs[index]
-        xx = df['step']
-        yy1 = df["norm"]
-        yy2 = df["energy"]
-        yy3 = df["timeDelay"]
-        # also calculate ranges
-        minx, maxx = xx.min(), xx.max()
-        rxx = [ minx, maxx]
-
-        miny, maxy = yy1.min(), yy1.max()
-        ryy1 = [miny*.9,maxy*1.1]
-
-        miny, maxy = yy2.min(), yy2.max()
-        ryy2 = [miny*.9,maxy*1.1]
-
-        miny, maxy = yy3.min(), yy3[10:].max()
-        ryy3 = [miny*.99,maxy*1.01]
-        return xx,yy1,yy2,yy3, rxx, ryy1,ryy2,ryy3
-
-
-# client = DataRequest() # reads and updates info.json and relavant data
-
-data = dataManager() # reads the file to use for the ui
-# probably i should merge the two classes
-
-
-server = flask.Flask('app')
-app = dash.Dash('app', server=server,external_stylesheets=['./assets/style.css'])
-app.title = 'Status Tracker'
-app.scripts.config.serve_locally = False
-
-
-config={
-    "displaylogo":False,
-    "responsive": True,
-    "modeBarButtonsToRemove" : ["toImage","sendDataToCloud"],
-}
+# Handle bad data in fort.21 file
 
 
 def getDT():
     return datetime.today().strftime('%H:%M:%S %b %d ')
+
+
+class dataManager():
+    def refreshData(self,file='info.json'):
+        with open(file) as f: self.info = json.load(f)
+        self.dfs =[pd.read_pickle('data'+ii['id']) for ii in self.info]
+
+
+
+data = dataManager() 
+# client = DataRequest() # reads and updates info.json and relavant data
+server = flask.Flask('app')
+app = dash.Dash('app', server=server,external_stylesheets=['./assets/style.css'])
+app.title = 'Status Tracker'
+app.scripts.config.serve_locally = False
 
 
 
@@ -96,41 +58,52 @@ def generatePage(val):
     # client = DataRequest()
     # client.updateData()
     data.refreshData()
-    return [[ getThisJob(index) for index in range(len(data.info)) ],getDT()]
+    return [[
+        html.Div(
+            getThisJobChild(index),
+            className="job",
+            id={
+                'type':'thisJob',
+                'index':index
+            }
+        ) for index in range(len(data.info)) 
+    ], getDT()]
 
 
 
 
-# @app.callback(
-#     Output({'type': 'thisJob', 'index': MATCH}, 'children'),
-#     [Input({'type': 'refButton', 'index': MATCH}, 'n_clicks')],
-#     [State({'type': 'refButton', 'index': MATCH}, 'id')],
-#     prevent_initial_call=True
-#     )
-# def updateThisJob(val, id):
-#     print('ref update')
-#     ind = id['index']
-#     updateThisJobInfo(ind)
-#     print (dash.callback_context.triggered)
-#     return getThisJobChild(ind)
+config={
+    "displaylogo":False,
+    "responsive": True,
+    "modeBarButtonsToRemove" : ["toImage","sendDataToCloud"],
+}
 
+layout = {
+    "margin":{
+        "t":10,"r":0,'l':20,"b":19
+    },
+    "autsize" : True,
+    "hovermode":"closest",
+    "xaxis":{
+        "automargin": True,
+        "zeroline": False,
+        "showline": True,
+        "showgrid": True,
+    },
+    "yaxis":{
+        "automargin": True,
+        "zeroline": False,
+        "showline": True,
+        "showgrid": True,
+    },
+    "showlegend": False,
+}
 
-
-
-def getThisJob(index):
-    return html.Div(
-        getThisJobChild(index),
-        className="job",
-        id={
-            'type':'thisJob',
-            'index':index
-        }
-    )
 
 
 def getThisJobChild(index):   # generates children for this particular job
     tInfo = data.info[index]
-    xx,yy1,yy2,yy3, rxx, ryy1,ryy2,ryy3 = data.getData(index)
+    df = data.dfs[index]
     return [
             html.Table([
                 html.Tr([
@@ -153,14 +126,6 @@ def getThisJobChild(index):   # generates children for this particular job
                     html.Td("Last Updated"),
                     html.Td([
                         tInfo["lastUpdated"],
-                        # html.Button(  # hide individual refresh button for now
-                        #     className="btn",
-                        #     n_clicks=0,
-                        #     id={
-                        #         'type':'refButton',
-                        #         'index':index
-                        #     }
-                        # )
                     ])
                 ]),
                 html.Tr([
@@ -183,24 +148,11 @@ def getThisJobChild(index):   # generates children for this particular job
                         figure={
                             'data': [
                                 {
-                                    'x': xx, 
-                                    'y': yy1
+                                    'x': df['step'], 
+                                    'y': df["norm"]
                                 }
                             ],
-                            "layout":{
-                                "margin":{
-                                    "t":10,"r":0,'l':20,"b":19
-                                },
-                                "autorange" : False,
-                                "hovermode":"closest",
-                                "xaxis":{
-                                    "range":rxx 
-                                },
-                                "yaxis":{
-                                    "range":ryy1
-                                },
-                                "showlegend": False,
-                            }
+                            "layout":layout
                         },
                         config = config
                     )
@@ -211,24 +163,11 @@ def getThisJobChild(index):   # generates children for this particular job
                         figure={
                             'data': [
                                 {
-                                    'x': xx, 
-                                    'y': yy2
+                                    'x': df['step'], 
+                                    'y': df["energy"]
                                 }
                             ],
-                            "layout":{
-                                "margin":{
-                                    "t":10,"r":0,'l':20,"b":19
-                                },
-                                "autorange" : False,
-                                "hovermode":"closest",
-                                "xaxis":{
-                                    "range":rxx 
-                                },
-                                "yaxis":{
-                                    "range":ryy2
-                                },
-                                "showlegend": False,
-                            }
+                            "layout":layout
                         },
                         config = config
                     )
@@ -239,24 +178,11 @@ def getThisJobChild(index):   # generates children for this particular job
                         figure={
                             'data': [
                                 {
-                                    'x': xx, 
-                                    'y': yy3,
+                                    'x': df['step'], 
+                                    'y': df["timeDelay"],
                                 }
                             ],
-                            "layout":{
-                                "margin":{
-                                    "t":10,"r":0,'l':20,"b":19
-                                },
-                                "autorange" : False,
-                                "hovermode":"closest",
-                                "xaxis":{
-                                    "range":rxx 
-                                },
-                                "yaxis":{
-                                    "range":ryy3
-                                },
-                                "showlegend": False,
-                            }
+                            "layout":layout
                         },
                         config = config
                     )

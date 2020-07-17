@@ -1,16 +1,16 @@
 [
     {
         "totalStep": "12000", 
-        "name": "trial feuigheg fuhweuf fuhfuf efuheguer efuhrufr rigurhgr ruirhgrueh", 
+        "name": "Test job", 
         "chunk": "norm", 
-        "avgTime": "8.28320108", 
-        "submitted": "07:12:06 PM Jun 19 ", 
+        "avgTime": "12.21 sec", 
+        "submitted": "08:08:23 PM Jul 16 ", 
         "host": "soumya", 
-        "eta": "4.60 hours", 
-        "timeSpent": "23.01 hours", 
-        "lastUpdated": "06:12:30 PM Jun 20 ", 
-        "id": "1157370262", 
-        "currentStep": "10000", 
-        "location": "/media/SOUMYA/KOUSHIK/mount/FH2_NEW/DIAB/MODIFIED_SURF/CURRENT_SURF/RHO_GRID_200/ALT_CHECK"
+        "eta": "25.11 hours", 
+        "timeSpent": "15.60 hours", 
+        "lastUpdated": "11:44:13 AM Jul 17 ", 
+        "id": "1134799513", 
+        "currentStep": "4599", 
+        "location": "/media/SOUMYA/KOUSHIK/mount/FH2_NEW/DIAB/MODIFIED_SURF_2/TEST"
     }
 ]

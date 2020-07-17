@@ -63,7 +63,8 @@ body{
     font-size: 30px;
     height: 50px;
     /* background-color: #cae4ab; */
-    background-color:coral;
+    background-color:#0298dc;
+    /* background-color:coral; */
     padding-top: 5px;
 }
 .lastRef{
@@ -95,7 +96,7 @@ body{
     
 }
 .jobDescription tr:first-child{
-    height: 3.3pc;
+    height: 3pc;
 }
 
 .jobDescription tr:nth-child(odd){
