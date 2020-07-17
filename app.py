@@ -12,6 +12,8 @@ from dataManager import DataRequest
 
 # TODO:
 # Handle bad data in fort.21 file
+# initially load data from the cache without requesting the data
+# run the data request every n seconds
 
 
 def getDT():
@@ -21,7 +23,7 @@ def getDT():
 class dataManager():
     def refreshData(self,file='info.json'):
         with open(file) as f: self.info = json.load(f)
-        self.dfs =[pd.read_pickle('data'+ii['id']) for ii in self.info]
+        self.dfs =[pd.read_pickle('data/'+ii['id']) for ii in self.info]
 
 
 
@@ -47,27 +49,6 @@ app.layout = html.Div([
         html.Label("Updating Database. Please wait....", style={"font-size":"21px"})
     ], style={"flex":1, "overflow-y": "auto"}),
 ],className='mainDiv')
-
-
-
-@app.callback(
-    [Output('jobList', 'children'),Output('lastUpdateStamp','children')],
-    [Input('fulRefBut', 'n_clicks')])
-def generatePage(val):
-    # also refresh the data
-    # client = DataRequest()
-    # client.updateData()
-    data.refreshData()
-    return [[
-        html.Div(
-            getThisJobChild(index),
-            className="job",
-            id={
-                'type':'thisJob',
-                'index':index
-            }
-        ) for index in range(len(data.info)) 
-    ], getDT()]
 
 
 
@@ -98,6 +79,27 @@ layout = {
     },
     "showlegend": False,
 }
+
+
+@app.callback(
+    [Output('jobList', 'children'),Output('lastUpdateStamp','children')],
+    [Input('fulRefBut', 'n_clicks')])
+def generatePage(val):
+    if(val!=0): # no request during page build
+        client = DataRequest()
+        client.updateData()
+    data.refreshData()
+    return [[
+        html.Div(
+            getThisJobChild(index),
+            className="job",
+            id={
+                'type':'thisJob',
+                'index':index
+            }
+        ) for index in range(len(data.info)) 
+    ], getDT()]
+
 
 
 
@@ -144,7 +146,7 @@ def getThisJobChild(index):   # generates children for this particular job
             dcc.Tabs([
                 dcc.Tab(label='Norm', children=[
                     dcc.Graph(
-                        animate=True,
+                        # animate=True,
                         figure={
                             'data': [
                                 {
@@ -159,7 +161,7 @@ def getThisJobChild(index):   # generates children for this particular job
                 ]),
                 dcc.Tab(label='Energy', children=[
                     dcc.Graph(
-                        animate=True,
+                        # animate=True,
                         figure={
                             'data': [
                                 {
@@ -174,7 +176,7 @@ def getThisJobChild(index):   # generates children for this particular job
                 ]),
                 dcc.Tab(label='Time Delay', children=[
                     dcc.Graph( 
-                        animate=True,
+                        # animate=True,
                         figure={
                             'data': [
                                 {

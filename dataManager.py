@@ -92,7 +92,7 @@ class DataRequest():
         sftp.get(filepath,localpath)
         if sftp: sftp.close()
         df, totalStep = self.readData()
-        df.to_pickle('data'+jId) # save the file and return df
+        df.to_pickle('data/'+jId) # save the file and return df
         return df, totalStep
 
 
