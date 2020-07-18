@@ -34,7 +34,22 @@ app = dash.Dash('app', server=server,external_stylesheets=['./assets/style.css']
 app.title = 'Status Tracker'
 app.scripts.config.serve_locally = False
 
+    # <div id='addjob'>
+    #     <div class="title">
+    #         <span class="titletxt">Add New Jobs</span>
+    #         <span class="clsBtn">X</span>
+    #     </div>
+    #     <div id="inputBox">
+    #         <input type="text" name="" id="jName" placeholder="Job Name">
+    #         <input type="text" name="" id="host" placeholder="Host">
+    #         <input type="text" name="" id="location" placeholder="Location">
+    #         <input type="submit" value="Submit" id='submit'>
+    #     </div>
+    # </div>
 
+    # <div id="addJobBtn">
+    #     +
+    # </div>
 
 app.layout = html.Div([
     html.Div([
@@ -48,7 +63,54 @@ app.layout = html.Div([
     html.Div(id='jobList', children=[
         html.Label("Updating Database. Please wait....", style={"font-size":"21px"})
     ], style={"flex":1, "overflow-y": "auto"}),
+    html.Div([
+        html.Div([
+            html.Label("Add New Jobs", className="titiletxt"),
+            html.Button("x", id="clsBtn", n_clicks=0)
+        ],className="title"),
+        html.Div([
+            dcc.Input(type="text", id="jName", placeholder="Job Name"),
+            dcc.Input(type="text", id="host", placeholder="Host"),
+            dcc.Input(type="text", id="location", placeholder="Location"),
+            html.Button("Submit", id="submit", n_clicks=0)
+        ],id="inputBox")
+    ],id='addjob'),
+    html.Button("+", id='addJobBtn',n_clicks=0),
+    html.Label('dummy', id='dummy', style={"display":"none"})
 ],className='mainDiv')
+
+
+
+
+@app.callback(
+    [Output('addjob', 'style'),Output('addJobBtn',"style")],
+    [Input('addJobBtn', 'n_clicks'),Input('clsBtn', 'n_clicks')],
+    [State('addjob', 'style')]
+    ,prevent_initial_call=True)
+def dialog(val,val2, style):
+    if style and style['opacity']=="1":
+        return [{
+            "max-height" : "0%",
+            "opacity" : '0'
+        },{"transform":"rotate(0deg)"}]
+    else:
+        return [{
+            "max-height" : "40%",
+            "opacity" : '1'
+        },{"transform":"rotate(45deg)"}]
+
+
+@app.callback(
+    [Output('dummy', 'children')],
+    [Input('submit', 'n_clicks')],
+    [State('jName', 'value'),State('host', 'value'),State('location', 'value')]
+    ,prevent_initial_call=True)
+def dialog(val,job,host, loc):
+    print(job,host,loc)
+    return ["dum"]
+
+
+
 
 
 
@@ -86,8 +148,11 @@ layout = {
     [Input('fulRefBut', 'n_clicks')])
 def generatePage(val):
     if(val!=0): # no request during page build
-        client = DataRequest()
-        client.updateData()
+        try:
+            client = DataRequest()
+            client.updateData()
+        except Exception as e:
+            print("Something went wrong",e)
     data.refreshData()
     return [[
         html.Div(
@@ -103,7 +168,7 @@ def generatePage(val):
 
 
 
-def getThisJobChild(index):   # generates children for this particular job
+def getThisJobChild(index): # generates children for this particular job
     tInfo = data.info[index]
     df = data.dfs[index]
     return [
