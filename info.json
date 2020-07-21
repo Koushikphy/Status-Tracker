@@ -1,16 +1,16 @@
 [
     {
-        "totalStep": "12000",
-        "name": "Test job",
-        "chunk": "norm",
-        "avgTime": "12.21 sec",
-        "submitted": "08:08:23 PM Jul 16 ",
-        "host": "soumya",
-        "eta": "17.47 hours",
-        "timeSpent": "23.23 hours",
-        "lastUpdated": "07:22:07 PM Jul 17 ",
-        "id": "1134799513",
-        "currentStep": "6850",
+        "totalStep": "12000", 
+        "name": "Test job", 
+        "chunk": "norm", 
+        "avgTime": "16.63 sec", 
+        "submitted": "12:29:09 AM Jul 22 ", 
+        "host": "soumya", 
+        "eta": "55.28 hours", 
+        "timeSpent": "0.14 hours", 
+        "lastUpdated": "12:37:30 AM Jul 22 ", 
+        "id": "1134799513", 
+        "currentStep": "32", 
         "location": "/media/SOUMYA/KOUSHIK/mount/FH2_NEW/DIAB/MODIFIED_SURF_2/TEST"
     }
 ]

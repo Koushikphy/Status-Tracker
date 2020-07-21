@@ -67,7 +67,7 @@ class DataRequest():
 
     def readJson(self):
         print("Reading configuration form info.json")
-        with open('./info.json') as f: 
+        with open('info.json') as f: 
             info = json.load(f)
         return info
 
@@ -92,7 +92,7 @@ class DataRequest():
         sftp.get(filepath,localpath)
         if sftp: sftp.close()
         df, totalStep = self.readData()
-        df.to_pickle('data/'+jId) # save the file and return df
+        df.to_pickle('data/'+jId, protocol=2) # save the file and return df
         return df, totalStep
 
 

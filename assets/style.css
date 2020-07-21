@@ -170,10 +170,6 @@ body{
 }
 
 
-
-
-
-
 #addJob{
     font-size: 25px;
     width: 70%;
@@ -208,7 +204,6 @@ body{
 #addButton{
     position: absolute;
     bottom: 0;
-    /* right: 0; */
     height: 50px;
     width: 50px;
     margin-right: 30px;
@@ -216,7 +211,7 @@ body{
     outline: none;
     border: none;
     font-size: 50px;
-    background-color: #119dff;
+    background-color: #0298dc;
     color: white;
 }
 
@@ -229,7 +224,7 @@ body{
     /* opacity: 1; */
     height: fit-content;
     max-height: 0%;
-    background-color: #8ee4af;
+    background-color: #0298dc;
     box-shadow: 8px 8px 6px -6px black;
     position: absolute;
     top:50%;
@@ -239,7 +234,7 @@ body{
     z-index: 999;
     border-radius: 3px;
     border: 1px solid black;
-    transition-property: all;
+    transition-property: max-height,opacity;
     transition-duration: 1s;
     transition-timing-function: cubic-bezier(0.13, 0.31, 0.27, 1.55);
 }
@@ -250,7 +245,6 @@ body{
 }
 #inputBox > input[type="text"] {
     border-radius: 0;
-    /* border: 1px solid black; */
     border:0;
     width: 90%;
     height: 150%;
@@ -270,20 +264,13 @@ body{
     font-size: 170%;
     border-top-left-radius: 3px;
     border-top-right-radius: 3px;
-    /* transition: opacity 1s cubic-bezier(0.68, -0.55, 0.27, 1.55); */
 }
-.titletxt{
 
-}
 #submit{
     width: fit-content;
     margin-top: 3%;
-    /* margin-left: 5%; */
     font-size: 150%;
-    /* height: 2.5pc; */
     line-height: 2.1pc;
-    /* font-size: 21px; */
-    /* margin-top: 2.1pc; */
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 #clsBtn{
@@ -306,7 +293,7 @@ body{
     height: 3.7pc;
     width: 3.7pc;
     color: white;
-    background-color: rgb(6, 211, 211);
+    background-color: #0298dc;
     font-size: 3.7pc;
     font-weight: bolder;
     border-radius: 3.7pc;

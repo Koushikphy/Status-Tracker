@@ -12,9 +12,6 @@ from dataManager import DataRequest
 
 # TODO:
 # Handle bad data in fort.21 file
-# initially load data from the cache without requesting the data
-# run the data request every n seconds
-
 
 def getDT():
     return datetime.today().strftime('%H:%M:%S %b %d ')
@@ -22,34 +19,27 @@ def getDT():
 
 class dataManager():
     def refreshData(self,file='info.json'):
-        with open(file) as f: self.info = json.load(f)
+        with open(file) as f: 
+            self.info = json.load(f)
         self.dfs =[pd.read_pickle('data/'+ii['id']) for ii in self.info]
-
+    # def updateInfo(self,job,host,loc):
+    #     self.info.append({
+    #         "name":job,
+    #         "host":host,
+    #         "location":loc
+    #     })
+    #     with open('info.json','w') as f:
+    #         json.dump(self.info,f,indent=4)
 
 
 data = dataManager() 
+data.refreshData()
 # client = DataRequest() # reads and updates info.json and relavant data
 server = flask.Flask('app')
-app = dash.Dash('app', server=server,external_stylesheets=['./assets/style.css'])
+app = dash.Dash('app', server=server, external_stylesheets=['./assets/style.css'])
 app.title = 'Status Tracker'
 app.scripts.config.serve_locally = False
 
-    # <div id='addjob'>
-    #     <div class="title">
-    #         <span class="titletxt">Add New Jobs</span>
-    #         <span class="clsBtn">X</span>
-    #     </div>
-    #     <div id="inputBox">
-    #         <input type="text" name="" id="jName" placeholder="Job Name">
-    #         <input type="text" name="" id="host" placeholder="Host">
-    #         <input type="text" name="" id="location" placeholder="Location">
-    #         <input type="submit" value="Submit" id='submit'>
-    #     </div>
-    # </div>
-
-    # <div id="addJobBtn">
-    #     +
-    # </div>
 
 app.layout = html.Div([
     html.Div([
@@ -76,7 +66,8 @@ app.layout = html.Div([
         ],id="inputBox")
     ],id='addjob'),
     html.Button("+", id='addJobBtn',n_clicks=0),
-    html.Label('dummy', id='dummy', style={"display":"none"})
+    html.Label('dummy', id='dummy', style={"display":"none"}),
+    dcc.Interval(id='trigger', interval=10000)
 ],className='mainDiv')
 
 
@@ -100,14 +91,14 @@ def dialog(val,val2, style):
         },{"transform":"rotate(45deg)"}]
 
 
-@app.callback(
-    [Output('dummy', 'children')],
-    [Input('submit', 'n_clicks')],
-    [State('jName', 'value'),State('host', 'value'),State('location', 'value')]
-    ,prevent_initial_call=True)
-def dialog(val,job,host, loc):
-    print(job,host,loc)
-    return ["dum"]
+# @app.callback(
+#     [Output('dummy', 'children')],
+#     [Input('submit', 'n_clicks')],
+#     [State('jName', 'value'),State('host', 'value'),State('location', 'value')]
+#     ,prevent_initial_call=True)
+# def dialog(val,job,host, loc):  # WIP
+#     print(job,host,loc)
+#     return ["dum"]
 
 
 
@@ -145,15 +136,16 @@ layout = {
 
 @app.callback(
     [Output('jobList', 'children'),Output('lastUpdateStamp','children')],
-    [Input('fulRefBut', 'n_clicks')])
-def generatePage(val):
+    [Input('fulRefBut', 'n_clicks'),Input('trigger', 'n_intervals')])
+def generatePage(val,*args):
     if(val!=0): # no request during page build
         try:
+            print('Hi there')
             client = DataRequest()
             client.updateData()
+            data.refreshData()
         except Exception as e:
             print("Something went wrong",e)
-    data.refreshData()
     return [[
         html.Div(
             getThisJobChild(index),
