@@ -31,10 +31,9 @@ class dataManager():
     #     with open('info.json','w') as f:
     #         json.dump(self.info,f,indent=4)
 
-
+updateInterVal = 1 # min
 data = dataManager() 
 data.refreshData()
-# client = DataRequest() # reads and updates info.json and relavant data
 server = flask.Flask('app')
 app = dash.Dash('app', server=server, external_stylesheets=['./assets/style.css'])
 app.title = 'Status Tracker'
@@ -67,7 +66,7 @@ app.layout = html.Div([
     ],id='addjob'),
     html.Button("+", id='addJobBtn',n_clicks=0),
     html.Label('dummy', id='dummy', style={"display":"none"}),
-    dcc.Interval(id='trigger', interval=10000)
+    dcc.Interval(id='trigger', interval=1000*60*updateInterVal)
 ],className='mainDiv')
 
 
