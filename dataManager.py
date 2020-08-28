@@ -102,7 +102,7 @@ class DataRequest():
     def readData(self,file='tmp.dat'):
         with open(file) as f:
             txt = f.read()
-        HostName = re.findall(  'Host: (\w+)' , txt)
+        HostName = re.findall(  'Host: (\w+)' , txt)[0]
         totalStep = int(re.findall('Total Time Step: (\d+)', txt)[0])
         txt = txt.split("Starting Propagation:")[1].split('\n')[5:]
         # splits along column
