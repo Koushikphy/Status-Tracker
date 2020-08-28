@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 class DataRequest():
     def __init__(self):
         # self.jobInfos = []
+        paramiko.util.log_to_file("ssh_log.log")  #<- sometimes throws problem
         self.client = paramiko.SSHClient()
         self.client._policy = paramiko.WarningPolicy()
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -30,8 +31,9 @@ class DataRequest():
                 dat['location'] = dat['location']
                 dat["id"] = newId
                 dat["chunk"] = "norm"
-            df, totalStep = self.requestData(dat['host'],dat['location'],dat["id"])
+            df, totalStep, HostName = self.requestData(dat['host'],dat['location'],dat["id"])
 
+            dat["HostName"] = HostName
             dat["currentStep"] = df["step"].iloc[-1]
             dat["totalStep"] = totalStep # do it somehow else
             dat["submitted"] = df["timeStamp"].iloc[0]#.strftime('%H:%M:%S %b %d ')
@@ -40,7 +42,7 @@ class DataRequest():
             timeLeft = (dat["totalStep"] - dat["currentStep"])*dat["avgTime"]
             dat["eta"] = timeLeft/3600.0  #  timeleft in hours  
             timeSpent = dat["lastUpdated"] - dat["submitted"]
-            dat["timeSpent"] = timeSpent.seconds/3600.0  #  timespent in hours  
+            dat["timeSpent"] = timeSpent.total_seconds()/3600.0  #  timespent in hours  
 
             # weird, python 2 cannot strftime any date below 1900
 
@@ -87,19 +89,20 @@ class DataRequest():
 
         print("Requesting data from {} at {}".format(host, location))
         # Download
-        filepath = location+"/fort.21"
+        filepath = location+"/abc.log"
         localpath = 'tmp.dat'
         sftp.get(filepath,localpath)
+        print("Data received")
         if sftp: sftp.close()
-        df, totalStep = self.readData()
+        df, totalStep, HostName = self.readData()
         df.to_pickle('data/'+jId, protocol=2) # save the file and return df
-        return df, totalStep
+        return df, totalStep, HostName
 
 
     def readData(self,file='tmp.dat'):
         with open(file) as f:
             txt = f.read()
-
+        HostName = re.findall(  'Host: (\w+)' , txt)
         totalStep = int(re.findall('Total Time Step: (\d+)', txt)[0])
         txt = txt.split("Starting Propagation:")[1].split('\n')[5:]
         # splits along column
@@ -108,13 +111,19 @@ class DataRequest():
         # merge the time and date column
 
         dat = [[ i[0],i[1], i[2]+' '+i[3], i[4],i[5],i[6]] for i in dat]
+        # problem on timedelay column
+        for i in range(len(dat)):
+            try:
+                float(dat[i][3])
+            except:
+                dat[i][3] = dat[i-1][3]
         # print(dat[0])
         col = {"step":'int', 'time':'float64','timeStamp':"datetime64", 'timeDelay':'float64', 'energy':'float64','norm':'float64'}
 
         df = pd.DataFrame(dat,columns=['step', 'time', 'timeStamp', 'timeDelay', 'energy','norm'])
         # print(df)
         df = df.astype(col)
-        return df, totalStep
+        return df, totalStep, HostName
 
 
 if __name__ == "__main__":

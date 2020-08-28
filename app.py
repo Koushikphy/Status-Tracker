@@ -31,7 +31,7 @@ class dataManager():
     #     with open('info.json','w') as f:
     #         json.dump(self.info,f,indent=4)
 
-updateInterVal = 1 # min
+updateInterVal = 100 # min
 data = dataManager() 
 data.refreshData()
 server = flask.Flask('app')
@@ -51,20 +51,20 @@ app.layout = html.Div([
     ],className="header"),
     html.Div(id='jobList', children=[
         html.Label("Updating Database. Please wait....", style={"font-size":"21px"})
-    ], style={"flex":1, "overflow-y": "auto"}),
-    html.Div([
-        html.Div([
-            html.Label("Add New Jobs", className="titiletxt"),
-            html.Button("x", id="clsBtn", n_clicks=0)
-        ],className="title"),
-        html.Div([
-            dcc.Input(type="text", id="jName", placeholder="Job Name"),
-            dcc.Input(type="text", id="host", placeholder="Host"),
-            dcc.Input(type="text", id="location", placeholder="Location"),
-            html.Button("Submit", id="submit", n_clicks=0)
-        ],id="inputBox")
-    ],id='addjob'),
-    html.Button("+", id='addJobBtn',n_clicks=0),
+    ], style={"flex":1, "overflow-y": "auto","padding-bottom":"13px"}),
+    # html.Div([
+    #     html.Div([
+    #         html.Label("Add New Jobs", className="titiletxt"),
+    #         html.Button("x", id="clsBtn", n_clicks=0)
+    #     ],className="title"),
+    #     html.Div([
+    #         dcc.Input(type="text", id="jName", placeholder="Job Name"),
+    #         dcc.Input(type="text", id="host", placeholder="Host"),
+    #         dcc.Input(type="text", id="location", placeholder="Location"),
+    #         html.Button("Submit", id="submit", n_clicks=0)
+    #     ],id="inputBox")
+    # ],id='addjob'),
+    # html.Button("+", id='addJobBtn',n_clicks=0),
     html.Label('dummy', id='dummy', style={"display":"none"}),
     dcc.Interval(id='trigger', interval=1000*60*updateInterVal)
 ],className='mainDiv')
@@ -72,22 +72,22 @@ app.layout = html.Div([
 
 
 
-@app.callback(
-    [Output('addjob', 'style'),Output('addJobBtn',"style")],
-    [Input('addJobBtn', 'n_clicks'),Input('clsBtn', 'n_clicks')],
-    [State('addjob', 'style')]
-    ,prevent_initial_call=True)
-def dialog(val,val2, style):
-    if style and style['opacity']=="1":
-        return [{
-            "max-height" : "0%",
-            "opacity" : '0'
-        },{"transform":"rotate(0deg)"}]
-    else:
-        return [{
-            "max-height" : "40%",
-            "opacity" : '1'
-        },{"transform":"rotate(45deg)"}]
+# @app.callback(
+#     [Output('addjob', 'style'),Output('addJobBtn',"style")],
+#     [Input('addJobBtn', 'n_clicks'),Input('clsBtn', 'n_clicks')],
+#     [State('addjob', 'style')]
+#     ,prevent_initial_call=True)
+# def dialog(val,val2, style):
+#     if style and style['opacity']=="1":
+#         return [{
+#             "max-height" : "0%",
+#             "opacity" : '0'
+#         },{"transform":"rotate(0deg)"}]
+#     else:
+#         return [{
+#             "max-height" : "40%",
+#             "opacity" : '1'
+#         },{"transform":"rotate(45deg)"}]
 
 
 # @app.callback(
@@ -170,7 +170,7 @@ def getThisJobChild(index): # generates children for this particular job
                 ]),
                 html.Tr([
                     html.Td("Host"),
-                    html.Td(tInfo["host"],title=tInfo["location"])
+                    html.Td(tInfo["HostName"],title=tInfo["location"])
                 ]),
                 html.Tr([
                     html.Td("Progress"),
