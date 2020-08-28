@@ -169,7 +169,7 @@ def getThisJobChild(index): # generates children for this particular job
                     html.Td(tInfo["name"])
                 ]),
                 html.Tr([
-                    html.Td("Host"),
+                    html.Td("Running On"),
                     html.Td(tInfo["HostName"],title=tInfo["location"])
                 ]),
                 html.Tr([
