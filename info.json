@@ -1,53 +1,32 @@
 [
     {
         "totalStep": "15000", 
-        "lastUpdated": "06:48:31 PM Aug 28 ", 
-        "name": "Diabatic JTOT=3", 
-        "submitted": "12:36:40 AM Aug 22 ", 
+        "name": "Fitted Surface", 
         "chunk": "norm", 
-        "HostName": [
-            "node3"
-        ], 
-        "avgTime": "40.79 sec", 
-        "currentStep": "14316", 
+        "HostName": "node2", 
+        "avgTime": "11.65 sec", 
+        "submitted": "10:03:04 PM Feb 10 ", 
         "host": "soumya", 
-        "eta": "7.75 hours", 
-        "timeSpent": "162.20 hours", 
-        "location": "/media/SOUMYA/KOUSHIK/mount/DIAB/NON_ZERO_J/NEW_CODE/JTOT_3/", 
-        "id": "2540778775"
+        "eta": "48.28 hours", 
+        "timeSpent": "0.27 hours", 
+        "lastUpdated": "10:19:32 PM Feb 10 ", 
+        "id": "7846893937", 
+        "currentStep": "87", 
+        "location": "/media/SOUMYA/KOUSHIK/mount/WITH_DDR/DIAB/JTOT_0/VERSION_5.0/VCUT_6"
     }, 
     {
         "totalStep": "15000", 
-        "lastUpdated": "06:57:57 PM Aug 28 ", 
-        "name": "Diabatic JTOT=4", 
-        "submitted": "12:53:06 AM Aug 22 ", 
+        "name": "Merged Surface", 
         "chunk": "norm", 
-        "HostName": [
-            "node2"
-        ], 
-        "avgTime": "57.20 sec", 
-        "currentStep": "10203", 
+        "HostName": "node2", 
+        "avgTime": "11.70 sec", 
+        "submitted": "10:02:16 PM Feb 10 ", 
         "host": "soumya", 
-        "eta": "76.22 hours", 
-        "timeSpent": "162.08 hours", 
-        "location": "/media/SOUMYA/KOUSHIK/mount/DIAB/NON_ZERO_J/NEW_CODE/JTOT_4/", 
-        "id": "9333644428"
-    }, 
-    {
-        "totalStep": "15000", 
-        "lastUpdated": "06:48:55 PM Aug 28 ", 
-        "name": "Diabatic JTOT=5", 
-        "submitted": "12:49:21 AM Aug 22 ", 
-        "chunk": "norm", 
-        "HostName": [
-            "node3"
-        ], 
-        "avgTime": "71.53 sec", 
-        "currentStep": "8157", 
-        "host": "soumya", 
-        "eta": "135.96 hours", 
-        "timeSpent": "161.99 hours", 
-        "location": "/media/SOUMYA/KOUSHIK/mount/DIAB/NON_ZERO_J/NEW_CODE/JTOT_5/", 
-        "id": "9902749614"
+        "eta": "48.43 hours", 
+        "timeSpent": "0.29 hours", 
+        "lastUpdated": "10:19:49 PM Feb 10 ", 
+        "id": "2743865373", 
+        "currentStep": "92", 
+        "location": "/media/SOUMYA/KOUSHIK/mount/WITH_DDR/DIAB/JTOT_0/VERSION_4.0/VCUT_6.0"
     }
 ]

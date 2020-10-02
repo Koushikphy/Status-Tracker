@@ -31,7 +31,7 @@ class dataManager():
     #     with open('info.json','w') as f:
     #         json.dump(self.info,f,indent=4)
 
-updateInterVal = 100 # min
+updateInterVal = .5 # min
 data = dataManager() 
 data.refreshData()
 server = flask.Flask('app')

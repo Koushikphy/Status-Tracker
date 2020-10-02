@@ -91,6 +91,7 @@ class DataRequest():
         # Download
         filepath = location+"/abc.log"
         localpath = 'tmp.dat'
+        # print(filepath)
         sftp.get(filepath,localpath)
         print("Data received")
         if sftp: sftp.close()
