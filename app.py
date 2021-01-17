@@ -32,7 +32,7 @@ class dataManager():
     #         json.dump(self.info,f,indent=4)
 
 updateInterVal = .5 # min
-data = dataManager() 
+data = dataManager()
 data.refreshData()
 server = flask.Flask('app')
 app = dash.Dash('app', server=server, external_stylesheets=['./assets/style.css'])
